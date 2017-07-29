@@ -24,10 +24,12 @@ You will need [Node.JS](https://www.npmjs.com/) installed on your system.
 
 # Commands to run application
 
+Coming Soon!
 <!-- tbd -->
 
 # Demo
 
+Coming Soon!
 <!-- ![Demo](tbd) -->
 
 # Packages Used
@@ -36,4 +38,4 @@ You will need [Node.JS](https://www.npmjs.com/) installed on your system.
 * [Colors](https://www.npmjs.com/package/colors)
 * [Inquirer](https://www.npmjs.com/package/inquirer)
 * [MySQL](https://www.npmjs.com/package/mysql)
-* [Columnify] (https://www.npmjs.com/package/columnify)
+* [Columnify](https://www.npmjs.com/package/columnify)
