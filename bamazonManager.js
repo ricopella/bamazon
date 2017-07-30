@@ -29,7 +29,6 @@ let product_catalog_names = [];
 
 connection.connect();
 
-
 function menuOptions() {
     inquirer.prompt([{
         name: "menu",
@@ -60,14 +59,14 @@ function showInventory() {
 
         // store data in new arrays for catalog selection
         newResults.forEach((element) => {
-            if (element !== newResults.indexOf(element))
-                product_catalog_names.push(element.product_name);
+            product_catalog_names.push(element.product_name);
         }, this);
         newResults.forEach((element) => {
             product_catalog.push(element);
         }, this);
+        menuOptions();
     });
-    menuOptions();
+
 }
 
 function lowInventory() {
@@ -77,8 +76,9 @@ function lowInventory() {
         console.log(`\n------------------------------------------------------------------------------------\n`.yellow);
         console.log(columnify(results, { columns: ['item_id', 'product_name', 'department_name', 'price', 'stock_quantity'] }))
         console.log(`\n------------------------------------------------------------------------------------\n`.yellow);
+        menuOptions();
     });
-    menuOptions();
+
 }
 
 function addInventory() {
@@ -132,55 +132,49 @@ function addProduct() {
         }, this);
 
         inquirer.prompt([{
-                name: "new_name",
-                message: "What is the Name of the Product?",
-                type: "input",
-                validate: (value) => {
-                    if (value.length < 1) {
-                        return "Please enter a Product";
-                    } else {
-                        return true;
-                    }
-                }
-            },
-            {
-                name: "department",
-                message: "What Department Will This Product Be In?",
-                type: "list",
-                choices: [
-                    'Computer Electronics',
-                    'Accessories',
-                    'Books'
-                ]
-            },
-            {
-                name: "new_price",
-                message: "What will be the Retail Price?",
-                type: "input",
-                validate: (value) => {
-                    let valid = !isNaN(parseFloat(value));
-                    return valid || 'Please enter a number'
-                }
-            },
-            {
-                name: "new_stock",
-                message: "How Many Units to Purchase?",
-                type: "input",
-                validate: (value) => {
-                    let valid = !isNaN(parseFloat(value));
-                    return valid || 'Please enter a number'
+            name: "new_name",
+            message: "What is the Name of the Product?",
+            type: "input",
+            validate: (value) => {
+                if (value.length < 1) {
+                    return "Please enter a Product";
+                } else {
+                    return true;
                 }
             }
-        ]).then(function(answers) {
+        }, {
+            name: "department",
+            message: "What Department Will This Product Be In?",
+            type: "list",
+            choices: [
+                'Computer Electronics',
+                'Accessories',
+                'Books'
+            ]
+        }, {
+            name: "new_price",
+            message: "What will be the Retail Price?",
+            type: "input",
+            validate: (value) => {
+                let valid = !isNaN(parseFloat(value));
+                return valid || 'Please enter a number'
+            }
+        }, {
+            name: "new_stock",
+            message: "How Many Units to Purchase?",
+            type: "input",
+            validate: (value) => {
+                let valid = !isNaN(parseFloat(value));
+                return valid || 'Please enter a number'
+            }
+        }]).then(function(answers) {
             console.log(answers.new_name, answers.department, answers.new_price, answers.new_stock);
             connection.query(`INSERT INTO products (product_name, department_name, price, stock_quantity) VALUES ("${answers.new_name}", "${answers.department}", ${answers.new_price}, ${answers.new_stock})`, function(error, results) {})
-
             console.log(`\n- - - - - - - - -\n`.green);
             console.log(`Product Added Successfully!`);
             console.log(`\n- - - - - - - - -\n`.green);
             menuOptions()
         })
-
     })
 }
 
