@@ -20,7 +20,8 @@ const options = {
     'View Products for Sale': () => { showInventory() },
     'View Low Inventory': () => { lowInventory() },
     'Add to Inventory': () => { addInventory() },
-    'Add New Product': () => { addProduct() }
+    'Add New Product': () => { addProduct() },
+    'Exit': () => { connection.end(); }
 }
 
 // global storage of current catalog
@@ -38,7 +39,8 @@ function menuOptions() {
             'View Products for Sale',
             'View Low Inventory',
             'Add to Inventory',
-            'Add New Product'
+            'Add New Product',
+            'Exit'
         ]
     }]).then(function(answers) {
         // runs the selected function
@@ -66,7 +68,6 @@ function showInventory() {
         }, this);
         menuOptions();
     });
-
 }
 
 function lowInventory() {
@@ -78,7 +79,6 @@ function lowInventory() {
         console.log(`\n------------------------------------------------------------------------------------\n`.yellow);
         menuOptions();
     });
-
 }
 
 function addInventory() {
