@@ -12,6 +12,8 @@ Follow these instructions to clone the project and run on your local drive.
 
 You will need [Node.JS](https://www.npmjs.com/) installed on your system.
 
+
+
 ### Installing
 
 1. Clone project: 
@@ -22,15 +24,43 @@ You will need [Node.JS](https://www.npmjs.com/) installed on your system.
 
         `npm install`
 
+* **Please Note**: You must obtain `keys.js` by [@ricopella](https://github.com/ricopella) to gain access to the database credentials.
+
 # Commands to run application
 
-Coming Soon!
-<!-- tbd -->
+1.      `node bamazonCustomer.js`
+    * This will start the `Customer Module`. 
+    * Product Catalog is displayed with `Product Name`, `Department Name`, `Price`, and `Stock Quantity`
+        * Out-of-Stock items are not displayed
+    * Customers are able to select a product to purchase & how many units.
+        * Customers are not able to purchase items with insufficent stock
+    * A total Bill is displayed
+    * Stock Quantity is decreased
+    
+
+2.      `node bamazonManager.js`
+    * This will start the `Manager Module`. Managers are able to:
+        * `View Products For Sale`
+            * Product Catalog is displayed with `Product Name`, `Department Name`, `Price`, and `Stock Quantity`
+            * Out-of-Stock items are not displayed
+        * `View Low Inventory`
+            * Lists all items with an inventory count lower than five
+        * `Add to Inventory`
+            * Manager is able to `add more` of any item currently in store
+        * `Add New Product`
+            * Manager can add a new product to the store
+
+3.      `node bamazonSupervisor.js`
+    * This will start the `Supervisor Module`. Supvervisors are able to:
+        * `View Product Sales by Department`
+            * This displays a summarized table showing `Department ID`, `Department Name`, `Overhead Costs`, `Product Sales`, and `Total Profits`
+        * `Create New Department`
+            * Supervisors can add a new department to the store
+
 
 # Demo
 
-Coming Soon!
-<!-- ![Demo](tbd) -->
+ ![Demo](example.gif) 
 
 # Packages Used
 
