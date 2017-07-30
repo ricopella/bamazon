@@ -168,7 +168,6 @@ function addProduct() {
                 return valid || 'Please enter a number'
             }
         }]).then(function(answers) {
-            console.log(answers.new_name, answers.department, answers.new_price, answers.new_stock);
             connection.query(`INSERT INTO products (product_name, department_name, price, stock_quantity) VALUES ("${answers.new_name}", "${answers.department}", ${answers.new_price}, ${answers.new_stock})`, function(error, results) {})
             console.log(`\n- - - - - - - - -\n`.green);
             console.log(`Product Added Successfully!`);

@@ -98,6 +98,4 @@ function purchase() {
 }
 
 showInventory();
-
-
 // connection.end();
