@@ -1,9 +1,8 @@
 /* =========================================================================================================
 
-                               bamazon - By: Narin R. Sundarabhaya
+                               bamazon Customer - By: Narin R. Sundarabhaya
 
  =========================================================================================================== */
-
 
 const mysql = require('mysql');
 const inquirer = require('inquirer');
@@ -16,11 +15,6 @@ const connection = mysql.createConnection({
     password: keys.password,
     database: keys.database
 });
-
-connection.connect();
-
-// global storage of current catalog
-
 
 function showInventory() {
     let product_catalog = [];
@@ -82,8 +76,8 @@ function purchase(product_catalog, product_catalog_names) {
         } else {
             // store current stock amount
             let current_quantity = chosen_product.stock_quantity - answers.purchase_amount;
-            let totalSale = answers.purchase_amount * chosen_product.price;
-            let increaseSales = chosen_product.product_sales + totalSale;
+            let totalSale = Math.round(answers.purchase_amount * chosen_product.price);
+            let increaseSales = Math.round(chosen_product.product_sales) + totalSale;
             // update db of stock quantity
             connection.query(`UPDATE products SET stock_quantity=${current_quantity}, product_sales=${increaseSales} WHERE item_id = ${chosen_id}`, function(error, results) {
                 console.log(`\n - - - - -  - - - - - - - - - - - - - - - - - - \n`.green);
@@ -99,4 +93,3 @@ function purchase(product_catalog, product_catalog_names) {
 }
 
 showInventory();
-// connection.end();
