@@ -1,10 +1,15 @@
+/* =========================================================================================================
+
+                               bamazon - By: Narin R. Sundarabhaya
+
+ =========================================================================================================== */
+
+
 const mysql = require('mysql');
 const inquirer = require('inquirer');
 const keys = require('./keys');
 const colors = require('colors');
 const columnify = require('columnify');
-
-
 const connection = mysql.createConnection({
     host: keys.host,
     user: keys.user,
@@ -19,9 +24,10 @@ let product_catalog = [];
 let product_catalog_names = [];
 
 function showInventory() {
-    connection.query('SELECT * FROM products', function(error, results) {
+    // only display items in stock
+    connection.query('SELECT * FROM products WHERE stock_quantity != 0', function(error, results) {
         if (error) throw error;
-        console.log(`------------------------------------------------------------------------------------`.yellow); // console.log(columnify(`|  ${results[i].item_id}  |  ${results[i].product_name}  |  ${results[i].department_name} |  ${results[i].price}  |  ${results[i].stock_quantity}  |`));
+        console.log(`------------------------------------------------------------------------------------`.yellow);
         console.log(columnify(results, { columns: ['item_id', 'product_name', 'department_name', 'price', 'stock_quantity'] }))
         console.log(`------------------------------------------------------------------------------------`.yellow);
 
@@ -29,17 +35,15 @@ function showInventory() {
         var newResults = JSON.parse(JSON.stringify(results));
 
         // store data in new arrays for catalog selection
-        newResults.forEach(function(element) {
+        newResults.forEach((element) => {
             product_catalog_names.push(element.product_name);
         }, this);
-        newResults.forEach(function(element) {
+        newResults.forEach((element) => {
             product_catalog.push(element);
         }, this);
 
         purchase();
     });
-
-
 }
 
 function purchase() {
@@ -48,12 +52,17 @@ function purchase() {
             name: "purchase_id",
             message: "Which product would you like to purchase?",
             type: "list",
-            choices: product_catalog_names
+            choices: product_catalog_names,
+
         },
         {
             name: "purchase_amount",
             message: "How many units would you like to purchase?",
-            type: "input"
+            type: "input",
+            validate: (value) => {
+                var valid = !isNaN(parseFloat(value));
+                return valid || 'Please enter a number'
+            }
         }
     ]).then(function(answers) {
         // refrences id of chosen product
@@ -75,7 +84,9 @@ function purchase() {
             // update db of stock quantity
             connection.query(`UPDATE products SET stock_quantity = ${current_quantity} WHERE item_id = ${chosen_id}`, function(error, results) {
                 console.log(`\n - - - - -  - - - - \n`.green);
-                console.log(`Your total will be: $${chosen_product.price * answers.purchase_amount}`);
+                console.log(`Items Purchased:\n`);
+                console.log(`${chosen_product.product_name} = ${chosen_product.price} x ${answers.purchase_amount}`);
+                console.log(`Your total will be: $${chosen_product.price * answers.purchase_amount}\n`);
                 console.log(`\n - - - - -  - - - - \n`.green);
 
                 showInventory();

@@ -11,7 +11,7 @@ price DECIMAL(5,2) NOT NULL,
 stock_quantity INTEGER(5) NOT NULL
 );
 
-use products;
+USE bamazon;
 
 SELECT * FROM products;
 
