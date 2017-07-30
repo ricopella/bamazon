@@ -81,8 +81,10 @@ function purchase() {
         } else {
             // store current stock amount
             let current_quantity = chosen_product.stock_quantity - answers.purchase_amount;
+            let totalSale = answers.purchase_amount * chosen_product.price;
+            let increaseSales = chosen_product.product_sales + totalSale;
             // update db of stock quantity
-            connection.query(`UPDATE products SET stock_quantity = ${current_quantity} WHERE item_id = ${chosen_id}`, function(error, results) {
+            connection.query(`UPDATE products SET stock_quantity=${current_quantity}, product_sales=${increaseSales} WHERE item_id = ${chosen_id}`, function(error, results) {
                 console.log(`\n - - - - -  - - - - \n`.green);
                 console.log(`Items Purchased:\n`);
                 console.log(`${chosen_product.product_name} = ${chosen_product.price} x ${answers.purchase_amount}`);

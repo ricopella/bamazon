@@ -45,6 +45,12 @@ INSERT INTO products (product_name, department_name, price, stock_quantity)
 INSERT INTO products (product_name, department_name, price, stock_quantity)
 	VALUES ("24' LCD Monitor", "Computer Electornics", 249.99, 5);
     
-
-
+ALTER TABLE products ADD product_sales DECIMAL(10,2) NOT NULL;
     
+CREATE TABLE departments (
+department_id INTEGER(10) auto_increment NOT NULL PRIMARY KEY UNIQUE,
+department_name VARCHAR(100) NOT NULL,
+over_head_cost DECIMAL(5,2) NOT NULL
+); 
+
+SELECT * FROM departments;
