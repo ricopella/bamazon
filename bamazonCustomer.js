@@ -20,10 +20,11 @@ const connection = mysql.createConnection({
 connection.connect();
 
 // global storage of current catalog
-let product_catalog = [];
-let product_catalog_names = [];
+
 
 function showInventory() {
+    let product_catalog = [];
+    let product_catalog_names = [];
     // only display items in stock
     connection.query('SELECT * FROM products WHERE stock_quantity != 0', function(error, results) {
         if (error) throw error;
@@ -42,11 +43,11 @@ function showInventory() {
             product_catalog.push(element);
         }, this);
 
-        purchase();
+        purchase(product_catalog, product_catalog_names);
     });
 }
 
-function purchase() {
+function purchase(product_catalog, product_catalog_names) {
     console.log("");
     inquirer.prompt([{
             name: "purchase_id",
@@ -77,7 +78,7 @@ function purchase() {
             console.log('Insufficient quantity!'.red);
             console.log(`\n - - - - -  - - - - - - - - - - - - - - - - - - \n`.red);
 
-            purchase();
+            purchase(product_catalog, product_catalog_names);
         } else {
             // store current stock amount
             let current_quantity = chosen_product.stock_quantity - answers.purchase_amount;
