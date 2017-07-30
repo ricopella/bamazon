@@ -60,7 +60,7 @@ function purchase() {
             message: "How many units would you like to purchase?",
             type: "input",
             validate: (value) => {
-                var valid = !isNaN(parseFloat(value));
+                let valid = !isNaN(parseFloat(value));
                 return valid || 'Please enter a number'
             }
         }

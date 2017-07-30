@@ -60,7 +60,8 @@ function showInventory() {
 
         // store data in new arrays for catalog selection
         newResults.forEach((element) => {
-            product_catalog_names.push(element.product_name);
+            if (element !== newResults.indexOf(element))
+                product_catalog_names.push(element.product_name);
         }, this);
         newResults.forEach((element) => {
             product_catalog.push(element);
@@ -73,9 +74,9 @@ function lowInventory() {
 
     connection.query('SELECT * FROM products WHERE stock_quantity < 5', function(error, results) {
         if (error) throw error;
-        console.log(`------------------------------------------------------------------------------------`.yellow);
+        console.log(`\n------------------------------------------------------------------------------------\n`.yellow);
         console.log(columnify(results, { columns: ['item_id', 'product_name', 'department_name', 'price', 'stock_quantity'] }))
-        console.log(`------------------------------------------------------------------------------------`.yellow);
+        console.log(`\n------------------------------------------------------------------------------------\n`.yellow);
     });
     menuOptions();
 }
@@ -103,7 +104,7 @@ function addInventory() {
             message: "How many units to purchase?",
             type: "input",
             validate: (value) => {
-                var valid = !isNaN(parseFloat(value));
+                let valid = !isNaN(parseFloat(value));
                 return valid || 'Please enter a number'
             }
         }]).then(function(answers) {
@@ -120,7 +121,67 @@ function addInventory() {
 }
 
 function addProduct() {
-    return;
+
+    connection.query('SELECT * FROM products', function(error, results) {
+        if (error) throw error;
+        let newResults = JSON.parse(JSON.stringify(results));
+
+        // store data in new arrays for catalog selection
+        newResults.forEach((element) => {
+            product_catalog.push(element);
+        }, this);
+
+        inquirer.prompt([{
+                name: "new_name",
+                message: "What is the Name of the Product?",
+                type: "input",
+                validate: (value) => {
+                    if (value.length < 1) {
+                        return "Please enter a Product";
+                    } else {
+                        return true;
+                    }
+                }
+            },
+            {
+                name: "department",
+                message: "What Department Will This Product Be In?",
+                type: "list",
+                choices: [
+                    'Computer Electronics',
+                    'Accessories',
+                    'Books'
+                ]
+            },
+            {
+                name: "new_price",
+                message: "What will be the Retail Price?",
+                type: "input",
+                validate: (value) => {
+                    let valid = !isNaN(parseFloat(value));
+                    return valid || 'Please enter a number'
+                }
+            },
+            {
+                name: "new_stock",
+                message: "How Many Units to Purchase?",
+                type: "input",
+                validate: (value) => {
+                    let valid = !isNaN(parseFloat(value));
+                    return valid || 'Please enter a number'
+                }
+            }
+        ]).then(function(answers) {
+            console.log(answers.new_name, answers.department, answers.new_price, answers.new_stock);
+            connection.query(`INSERT INTO products (product_name, department_name, price, stock_quantity) VALUES ("${answers.new_name}", "${answers.department}", ${answers.new_price}, ${answers.new_stock})`, function(error, results) {})
+
+            console.log(`\n- - - - - - - - -\n`.green);
+            console.log(`Product Added Successfully!`);
+            console.log(`\n- - - - - - - - -\n`.green);
+            menuOptions()
+        })
+
+    })
 }
 
 menuOptions();
