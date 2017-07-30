@@ -74,9 +74,9 @@ function lowInventory() {
 
     connection.query('SELECT * FROM products WHERE stock_quantity < 5', function(error, results) {
         if (error) throw error;
-        console.log(`\n------------------------------------------------------------------------------------\n`.yellow);
+        console.log(`\n------------------------------------------------------------------------------------\n`.red);
         console.log(columnify(results, { columns: ['item_id', 'product_name', 'department_name', 'price', 'stock_quantity'] }))
-        console.log(`\n------------------------------------------------------------------------------------\n`.yellow);
+        console.log(`\n------------------------------------------------------------------------------------\n`.red);
         menuOptions();
     });
 }

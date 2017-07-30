@@ -73,9 +73,9 @@ function purchase() {
 
         // validate if product is in stock
         if (chosen_product.stock_quantity < answers.purchase_amount) {
-            console.log(`\n - - - - -  - - - - \n`.red);
+            console.log(`\n - - - - -  - - - - - - - - - - - - - - - - - - \n`.red);
             console.log('Insufficient quantity!'.red);
-            console.log(`\n - - - - -  - - - - \n`.red);
+            console.log(`\n - - - - -  - - - - - - - - - - - - - - - - - - \n`.red);
 
             purchase();
         } else {
@@ -85,11 +85,11 @@ function purchase() {
             let increaseSales = chosen_product.product_sales + totalSale;
             // update db of stock quantity
             connection.query(`UPDATE products SET stock_quantity=${current_quantity}, product_sales=${increaseSales} WHERE item_id = ${chosen_id}`, function(error, results) {
-                console.log(`\n - - - - -  - - - - \n`.green);
+                console.log(`\n - - - - -  - - - - - - - - - - - - - - - - - - \n`.green);
                 console.log(`Items Purchased:\n`);
                 console.log(`${chosen_product.product_name} = ${chosen_product.price} x ${answers.purchase_amount}`);
                 console.log(`Your total will be: $${chosen_product.price * answers.purchase_amount}\n`);
-                console.log(`\n - - - - -  - - - - \n`.green);
+                console.log(`\n - - - - -  - - - - - - - - - - - - - - - - - - \n`.green);
 
                 showInventory();
             })

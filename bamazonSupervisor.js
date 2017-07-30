@@ -18,6 +18,7 @@ const options = {
 connection.connect();
 
 function menuOptions() {
+    console.log("");
     inquirer.prompt([{
         name: "menu",
         message: "Please Select Option:",
@@ -35,7 +36,23 @@ function menuOptions() {
 
 function showDeptSales() {
 
-}
+    connection.query(`SELECT departments.department_id AS 'Department ID', 
+                        departments.department_name AS 'Department Name', 
+                        departments.over_head_cost as 'Overhead Costs', 
+                        SUM(products.product_sales) AS 'Product Sales', 
+                        (SUM(products.product_sales) - departments.over_head_cost) AS 'Total Profit'  
+                        FROM departments
+                        LEFT JOIN products on products.department_name=departments.department_name
+                        GROUP BY departments.department_name, departments.department_id, departments.over_head_cost
+                        ORDER BY departments.department_id ASC`, function(error, results) {
+        if (error) throw error;
+        console.log(`\n------------------------------------------------------------------------------------\n`.yellow);
+        console.log(columnify(results, { columns: ["Department ID", "Department Name", "Overhead Costs", "Product Sales", "Total Profit"] }));
+        console.log(`\n------------------------------------------------------------------------------------\n`.yellow);
+
+        menuOptions();
+    })
+};
 
 function createDept() {
     inquirer.prompt([{
@@ -62,6 +79,8 @@ function createDept() {
         console.log(`\n- - - - - - - - -\n`.green);
         console.log(`Department Added Successfully!`);
         console.log(`\n- - - - - - - - -\n`.green);
-        menuOptions()
+        menuOptions();
     })
 }
+
+menuOptions();
