@@ -122,6 +122,13 @@ function addInventory() {
 
 function addProduct() {
     let product_catalog_dept = [];
+    connection.query('SELECT department_name FROM departments GROUP BY department_Name', function(error, results) {
+        if (error) throw error;
+
+        results.forEach((element) => {
+            product_catalog_dept.push(element.department_name);
+        }, this);
+    });
 
     connection.query('SELECT * FROM products', function(error, results) {
         if (error) throw error;
@@ -131,14 +138,6 @@ function addProduct() {
         newResults.forEach((element) => {
             product_catalog.push(element);
         }, this);
-
-        connection.query('SELECT department_name FROM departments GROUP BY department_Name', function(error, results) {
-            if (error) throw error;
-
-            results.forEach((element) => {
-                product_catalog_dept.push(element.department_name);
-            }, this);
-        });
 
         inquirer.prompt([{
             name: "new_name",
@@ -173,7 +172,7 @@ function addProduct() {
                 return valid || 'Please enter a number'
             }
         }]).then(function(answers) {
-            connection.query(`INSERT INTO products (product_name, department_name, price, stock_quantity, over_) VALUES ("${answers.new_name}", "${answers.department}", ${answers.new_price}, ${answers.new_stock})`, function(error, results) {})
+            connection.query(`INSERT INTO products (product_name, department_name, price, stock_quantity) VALUES ("${answers.new_name}", "${answers.department}", ${answers.new_price}, ${answers.new_stock})`, function(error, results) {})
             console.log(`\n- - - - - - - - -\n`.green);
             console.log(`Product Added Successfully!`);
             console.log(`\n- - - - - - - - -\n`.green);
