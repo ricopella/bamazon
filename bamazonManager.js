@@ -27,11 +27,9 @@ const options = {
 // global storage of current catalog
 let product_catalog = [];
 let product_catalog_names = [];
-
-connection.connect();
-
-function menuOptions() {
-    inquirer.prompt([{
+// Inquierer Prompts
+let questions = {
+    menuQuestions: [{
         name: "menu",
         message: "Please Select Option:",
         type: "list",
@@ -42,10 +40,27 @@ function menuOptions() {
             'Add New Product',
             'Exit'
         ]
-    }]).then(function(answers) {
-        // runs the selected function
-        options[answers.menu]();
-    })
+    }],
+    addInvQuestions: [{
+        name: "chosenProduct",
+        message: "Which Product Would You Like to add Inventory?",
+        type: "list",
+        choices: product_catalog_names
+    }, {
+        name: "chosenAmount",
+        message: "How many units to purchase?",
+        type: "input",
+        validate: (value) => {
+            let valid = !isNaN(parseFloat(value));
+            return valid || 'Please enter a number'
+        }
+    }]
+}
+
+connection.connect();
+
+function menuOptions() {
+    inquirer.prompt(questions.menuQuestions).then((answers) => { options[answers.menu]() })
 }
 
 function showInventory() {
@@ -94,20 +109,7 @@ function addInventory() {
             product_catalog.push(element);
         }, this);
 
-        inquirer.prompt([{
-            name: "chosenProduct",
-            message: "Which Product Would You Like to add Inventory?",
-            type: "list",
-            choices: product_catalog_names
-        }, {
-            name: "chosenAmount",
-            message: "How many units to purchase?",
-            type: "input",
-            validate: (value) => {
-                let valid = !isNaN(parseFloat(value));
-                return valid || 'Please enter a number'
-            }
-        }]).then(function(answers) {
+        inquirer.prompt(questions.addInvQuestions).then((answers) => {
             let indexOfProduct = product_catalog_names.indexOf(answers.chosenProduct);
             let newQuantity = parseFloat(product_catalog[indexOfProduct].stock_quantity) + parseFloat(answers.chosenAmount);
             connection.query(`UPDATE products SET stock_quantity = ${newQuantity} WHERE item_id = ${indexOfProduct + 1}`, function(error, results) {})

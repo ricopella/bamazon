@@ -15,10 +15,42 @@ const connection = mysql.createConnection({
     password: keys.password,
     database: keys.database
 });
+let product_catalog = [];
+let product_catalog_names = [];
+// Inquierer Prompts
+var inqQuestions = {
+    another: [{
+        name: "purchase_more",
+        message: "Would you like to make another purchase?",
+        type: "list",
+        choices: [
+            'yes',
+            'no'
+        ]
+    }],
+    purchase: [{
+            name: "purchase_id",
+            message: "Which product would you like to purchase?",
+            type: "list",
+            choices: product_catalog_names,
+
+        },
+        {
+            name: "purchase_amount",
+            message: "How many units would you like to purchase?",
+            type: "input",
+            validate: (value) => {
+                let valid = !isNaN(parseFloat(value));
+                return valid || 'Please enter a number'
+            }
+        }
+    ],
+
+
+}
 
 function showInventory() {
-    let product_catalog = [];
-    let product_catalog_names = [];
+
     // only display items in stock
     connection.query('SELECT * FROM products WHERE stock_quantity != 0', function(error, results) {
         if (error) throw error;
@@ -43,23 +75,7 @@ function showInventory() {
 
 function purchase(product_catalog, product_catalog_names) {
     console.log("");
-    inquirer.prompt([{
-            name: "purchase_id",
-            message: "Which product would you like to purchase?",
-            type: "list",
-            choices: product_catalog_names,
-
-        },
-        {
-            name: "purchase_amount",
-            message: "How many units would you like to purchase?",
-            type: "input",
-            validate: (value) => {
-                let valid = !isNaN(parseFloat(value));
-                return valid || 'Please enter a number'
-            }
-        }
-    ]).then(function(answers) {
+    inquirer.prompt(inqQuestions.purchase).then(function(answers) {
         // refrences id of chosen product
         let chosen_id = product_catalog_names.indexOf(answers.purchase_id) + 1;
 
