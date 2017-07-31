@@ -43,8 +43,7 @@ var runProgram = {
 
             // store data in new arrays for catalog selection
 
-        }, this.purchase(this.product_catalog, this.product_catalog_names), this.addProduct_catalog(newResults), this.addProduct_catalog_names(newResults));
-
+        }, this.purchase(this.product_catalog, this.product_catalog_names), this.addProduct_catalog(this.newResults), this.addProduct_catalog_names(this.newResults));
     },
     purchase: function(product_catalog, product_catalog_names) {
         console.log("");
